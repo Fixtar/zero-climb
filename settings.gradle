@@ -1,0 +1,6 @@
+rootProject.name = 'zero-climb'
+include 'controller'
+include 'service'
+include 'repository'
+include 'domain'
+
