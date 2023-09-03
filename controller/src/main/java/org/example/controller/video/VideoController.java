@@ -1,6 +1,8 @@
 package org.example.controller.video;
 
 import lombok.RequiredArgsConstructor;
+import org.example.FileService;
+import org.example.exception.FileUploadException;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -16,6 +18,8 @@ import java.util.List;
 @RequiredArgsConstructor
 @CrossOrigin(origins = "http://localhost:8081")
 public class VideoController {
+
+    private final FileService fileService;
 
     @GetMapping("/sample/video1")
     public ResponseEntity<StreamingResponseBody> video() {
@@ -47,5 +51,17 @@ public class VideoController {
         return ResponseEntity.ok().headers(responseHeaders).body(streamingResponseBody);
     }
 
+
+    @PostMapping("/file")
+    public void uploadVideo(@RequestParam("file") MultipartFile multipartFile) throws FileUploadException {
+        System.out.println("upload controller");
+        System.out.println(multipartFile.getOriginalFilename());
+        String originFileName = multipartFile.getOriginalFilename();
+
+
+        fileService.fileUpload(multipartFile);
+        System.out.println("upload success" + originFileName);
+
+    }
 
 }
