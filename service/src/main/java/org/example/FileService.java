@@ -1,13 +1,18 @@
 package org.example;
 
+import com.amazonaws.services.s3.AmazonS3Client;
+import com.amazonaws.services.s3.model.ObjectMetadata;
+import lombok.RequiredArgsConstructor;
 import org.example.dto.FileStreamingDto;
 import org.example.exception.FileUploadException;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.mvc.method.annotation.StreamingResponseBody;
 
 import java.io.File;
 import java.io.FileInputStream;
+import java.io.IOException;
 import java.io.InputStream;
 import java.nio.file.Files;
 import java.nio.file.Path;
@@ -16,27 +21,54 @@ import java.nio.file.StandardCopyOption;
 import java.util.UUID;
 
 @Service
+@RequiredArgsConstructor
 public class FileService {
 
     private String storeDir = "/Users/seongha/Desktop/dev/zero-climb/video/";
 
-    public void fileUpload(MultipartFile multipartFile) throws FileUploadException {
 
-        if (multipartFile.isEmpty()) {
-            System.out.println("file does not exist");
-        }
-        UUID uuid = new UUID(3, 4);
-        String type = multipartFile.getOriginalFilename().split("\\.")[1];
-        System.out.println(type);
-        Path path = Paths.get(storeDir + uuid + "." + type);
-        System.out.println("Service file : " + multipartFile.getOriginalFilename());
+    private final AmazonS3Client amazonS3Client;
+
+    @Value("${cloud.aws.s3.bucket}")
+    private String bucket;
+
+    public String fileUpload(MultipartFile multipartFile) throws FileUploadException {
 
         try {
-            Files.copy(multipartFile.getInputStream(), path, StandardCopyOption.REPLACE_EXISTING);
-        } catch (Exception e) {
-            throw new FileUploadException("Could not store file : " + multipartFile.getOriginalFilename());
+            String originalFilename = multipartFile.getOriginalFilename();
+            String uploadFileName = "videos/" + originalFilename;
+
+            ObjectMetadata objectMetadata = new ObjectMetadata();
+            objectMetadata.setContentLength(multipartFile.getSize());
+            objectMetadata.setContentType(multipartFile.getContentType());
+
+            amazonS3Client.putObject(bucket, uploadFileName, multipartFile.getInputStream(), objectMetadata);
+            return amazonS3Client.getUrl(bucket, uploadFileName).toString();
+        } catch (IOException e) {
+            throw new FileUploadException("upload error");
         }
+
     }
+
+
+    //로컬에 파일 업로드
+//    public void fileUpload(MultipartFile multipartFile) throws FileUploadException {
+//
+//        if (multipartFile.isEmpty()) {
+//            System.out.println("file does not exist");
+//        }
+//        UUID uuid = new UUID(3, 4);
+//        String type = multipartFile.getOriginalFilename().split("\\.")[1];
+//        System.out.println(type);
+//        Path path = Paths.get(storeDir + uuid + "." + type);
+//        System.out.println("Service file : " + multipartFile.getOriginalFilename());
+//
+//        try {
+//            Files.copy(multipartFile.getInputStream(), path, StandardCopyOption.REPLACE_EXISTING);
+//        } catch (Exception e) {
+//            throw new FileUploadException("Could not store file : " + multipartFile.getOriginalFilename());
+//        }
+//    }
 
     public FileStreamingDto loadFile(String id) {
 
