@@ -1,4 +1,4 @@
-package org.example.exception;
+package org.example.file.exception;
 
 public class FileUploadException extends Exception{
 
