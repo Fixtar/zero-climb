@@ -6,5 +6,7 @@ public interface PostService {
 
     PostInfoDto getPostByPostId(Long postId);
 
+    Long uploadPost(PostInfoDto postInfoDto);
+
 
 }

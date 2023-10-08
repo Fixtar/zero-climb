@@ -1,6 +1,8 @@
 package org.example.entity.posts;
 
+import lombok.Builder;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.Setter;
 import org.example.entity.user.Member;
 
@@ -11,6 +13,7 @@ import java.util.Set;
 @Entity
 @Getter
 @Setter
+@NoArgsConstructor
 @Table(name = "Post")
 public class Post {
 
@@ -32,4 +35,12 @@ public class Post {
     @JoinColumn(name = "member_id")
     private Member member;
 
+
+    @Builder
+    public Post(String content, String difficulty, Set<String> videoList, Member member) {
+        Content = content;
+        Difficulty = difficulty;
+        this.videoList = videoList;
+        this.member = member;
+    }
 }
