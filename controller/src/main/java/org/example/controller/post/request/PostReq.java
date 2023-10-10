@@ -9,7 +9,6 @@ import java.util.Set;
 
 @Builder
 @Getter
-@Setter
 public class PostReq {
 
     private String Content;

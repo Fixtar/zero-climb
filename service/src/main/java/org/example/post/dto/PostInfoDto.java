@@ -9,7 +9,6 @@ import java.util.Set;
 
 @Builder
 @Getter
-@Setter
 public class PostInfoDto {
 
     private Long id;
