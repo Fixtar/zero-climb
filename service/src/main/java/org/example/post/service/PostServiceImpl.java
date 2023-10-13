@@ -3,7 +3,6 @@ package org.example.post.service;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.example.entity.posts.Post;
-import org.example.entity.user.Member;
 import org.example.post.PostRepository;
 import org.example.post.PostService;
 import org.example.post.dto.PostInfoDto;
