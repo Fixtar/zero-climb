@@ -2,11 +2,16 @@ package org.example.user;
 
 import lombok.RequiredArgsConstructor;
 import org.example.auth.JwtTokenProvider;
-import org.example.auth.TokenDto;
+import org.example.auth.dto.SignUpDto;
+import org.example.auth.dto.TokenDto;
+import org.example.entity.user.User;
+import org.example.exception.Error;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.core.Authentication;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 @Service
 @RequiredArgsConstructor
@@ -15,6 +20,7 @@ public class UserService {
     private final UserRepository userRepository;
     private final AuthenticationManagerBuilder authenticationManagerBuilder;
     private final JwtTokenProvider jwtTokenProvider;
+    private final PasswordEncoder passwordEncoder;
 
     public TokenDto login(String memberId, String password){
         // 1. Login ID/PW 를 기반으로 Authentication 객체 생성
@@ -29,6 +35,28 @@ public class UserService {
         TokenDto tokenDto = jwtTokenProvider.generateToken(authentication);
 
         return tokenDto;
+    }
+
+    @Transactional
+    public void signUp(SignUpDto signUpDto){
+
+        String memberId = signUpDto.getMemberId();
+        String password = signUpDto.getPassword();
+        Boolean isExistedMemberId = userRepository.existsUserByMemberId(memberId).isPresent();
+
+        if(isExistedMemberId){
+            throw new IllegalArgumentException(Error.ALREADY_EXIST_USER_EXCEPTION.getMessage());
+        }
+
+        // 패스워드 조건 검증
+        String encryptedPassword = passwordEncoder.encode(password);
+        User user = User.builder()
+                .memberId(memberId)
+                .password(encryptedPassword)
+                .name(signUpDto.getNickname())
+                .build();
+        userRepository.save(user);
+
     }
 
 }

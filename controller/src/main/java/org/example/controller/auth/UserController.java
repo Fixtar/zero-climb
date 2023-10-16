@@ -1,8 +1,9 @@
 package org.example.controller.auth;
 
 import lombok.RequiredArgsConstructor;
-import org.example.auth.TokenDto;
+import org.example.auth.dto.TokenDto;
 import org.example.controller.auth.request.LoginRequest;
+import org.example.controller.auth.request.SignUpRequest;
 import org.example.user.UserService;
 import org.springframework.web.bind.annotation.*;
 
@@ -24,6 +25,13 @@ public class UserController {
     @PostMapping("/test")
     public String test() {
         return "success";
+    }
+
+    @PostMapping("/signup")
+    public String signup(@RequestBody SignUpRequest signUpRequest){
+
+
+
     }
 
 }
