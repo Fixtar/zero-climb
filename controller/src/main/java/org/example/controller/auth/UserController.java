@@ -1,6 +1,7 @@
 package org.example.controller.auth;
 
 import lombok.RequiredArgsConstructor;
+import org.example.auth.dto.SignUpDto;
 import org.example.auth.dto.TokenDto;
 import org.example.controller.auth.request.LoginRequest;
 import org.example.controller.auth.request.SignUpRequest;
@@ -28,9 +29,14 @@ public class UserController {
     }
 
     @PostMapping("/signup")
-    public String signup(@RequestBody SignUpRequest signUpRequest){
+    public String signup(@RequestBody SignUpRequest signUpRequest) {
 
-
+        userService.signUp(SignUpDto.builder()
+                .memberId(signUpRequest.getMemberId())
+                .password(signUpRequest.getPassword())
+                .nickname(signUpRequest.getNickname())
+                .build());
+        return "sign up success";
 
     }
 
