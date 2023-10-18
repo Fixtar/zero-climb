@@ -15,6 +15,6 @@ public class PostReq {
 
     private String Difficulty;
 
-    private Long memberId;
+    private String memberId;
 
 }

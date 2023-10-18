@@ -34,7 +34,7 @@ public class PostController {
                 .Content(postInfoDto.getContent())
                 .Difficulty(postInfoDto.getDifficulty())
                 .videoList(postInfoDto.getVideoList())
-                //.memberId(postInfoDto.getMemberId())
+                .memberId(postInfoDto.getMemberId())
                 .build();
     }
 

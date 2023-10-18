@@ -19,6 +19,6 @@ public class PostInfoDto {
 
     private Set<String> videoList = new HashSet<>();
 
-    private Long memberId;
+    private String memberId;
 
 }
