@@ -1,9 +1,9 @@
-package org.example.entity.posts;
+package org.example.entity;
 
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-import org.example.entity.user.User;
+import org.springframework.lang.Nullable;
 
 import javax.persistence.*;
 import java.util.HashSet;
@@ -15,17 +15,20 @@ import java.util.Set;
 @Table(name = "Post")
 public class Post {
 
-    @Id @GeneratedValue(strategy = GenerationType.AUTO)
+    @Id
+    @GeneratedValue(strategy = GenerationType.AUTO)
     @Column(name = "post_id")
     private Long id;
 
-    @Column(name = "post_content")
-    private String Content;
+    private String content;
 
-    @Column(name = "post_difficulty")
-    private String Difficulty;
+    @ManyToOne
+    @JoinColumn(name = "gym_id")
+    private Gym gym;
 
-    @ElementCollection(targetClass = String.class,fetch = FetchType.EAGER)
+    private String difficulty;
+
+    @ElementCollection(targetClass = String.class, fetch = FetchType.EAGER)
     @Column(name = "post_video_url_list")
     private Set<String> videoList = new HashSet<>();
 
@@ -35,9 +38,10 @@ public class Post {
 
 
     @Builder
-    public Post(String content, String difficulty, Set<String> videoList, User user) {
-        Content = content;
-        Difficulty = difficulty;
+    public Post(String content, Gym gym, String difficulty, Set<String> videoList, User user) {
+        this.content = content;
+        this.gym = gym;
+        this.difficulty = difficulty;
         this.videoList = videoList;
         this.user = user;
     }

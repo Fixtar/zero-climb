@@ -7,6 +7,9 @@ spring:
   jpa:
     hibernate:
       ddl-auto: create-drop
+      hbm2ddl:
+        import_files: classpath:db/import.sql # DB 파일 명시적으로 선택
+        import_files_sql_extractor: org.hibernate.tool.hbm2ddl.MultipleLinesSqlCommandExtractor # 멀티 라인 입력 가능하도록
     properties:
       hibernate:
        show_sql: true

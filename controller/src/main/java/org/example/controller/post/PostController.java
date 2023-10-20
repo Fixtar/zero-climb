@@ -35,6 +35,7 @@ public class PostController {
                 .Difficulty(postInfoDto.getDifficulty())
                 .videoList(postInfoDto.getVideoList())
                 .memberId(postInfoDto.getMemberId())
+                .location(postInfoDto.getLocation())
                 .build();
     }
 
@@ -49,6 +50,7 @@ public class PostController {
                 .Difficulty(postReq.getDifficulty())
                 .memberId(postReq.getMemberId())
                 .videoList(fileUrlList)
+                .location(postReq.getLocation())
                 .build();
 
         return postService.uploadPost(postInfoDto);
