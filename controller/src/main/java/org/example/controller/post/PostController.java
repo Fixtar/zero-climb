@@ -10,6 +10,9 @@ import org.example.file.exception.FileUploadException;
 import org.example.post.PostRepository;
 import org.example.post.PostService;
 import org.example.post.dto.PostInfoDto;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Slice;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -65,6 +68,20 @@ public class PostController {
     public List<PostRes> getPostListByUserId(@RequestParam(name = "user") String memberId) {
         List<Post> postList = postRepository.getPostsByUser_MemberId(memberId);
         return postListToPostResList(postList);
+    }
+
+    @GetMapping("/gym")
+    public Slice<PostRes> getPostListByGym(@RequestParam(name = "gym") String gymName){
+        Slice<Post> postSlice = postRepository.findSliceByGym_Name(gymName, PageRequest.of(0,9));
+        return postSlice.map(post -> PostRes.builder()
+                .id(post.getId())
+                .Content(post.getContent())
+                .memberId(post.getUser().getMemberId())
+                .videoList(post.getVideoList())
+                .location(post.getGym().getName())
+                .Difficulty(post.getDifficulty())
+                .build()
+        );
     }
 
     private List<PostRes> postListToPostResList(List<Post> postList) {
