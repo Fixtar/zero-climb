@@ -80,6 +80,8 @@ public class PostController {
                 .videoList(post.getVideoList())
                 .location(post.getGym().getName())
                 .Difficulty(post.getDifficulty())
+                .createdAt(post.getCreated_at())
+                .lastModifiedAt(post.getUpdated_at())
                 .build()
         );
     }

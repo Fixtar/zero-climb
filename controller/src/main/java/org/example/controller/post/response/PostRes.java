@@ -1,5 +1,6 @@
 package org.example.controller.post.response;
 
+import java.time.LocalDateTime;
 import lombok.Builder;
 import lombok.Getter;
 
@@ -21,5 +22,9 @@ public class PostRes {
     private String memberId;
 
     private String location;
+
+    private LocalDateTime createdAt;
+
+    private LocalDateTime lastModifiedAt;
 
 }
