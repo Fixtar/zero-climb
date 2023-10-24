@@ -3,7 +3,6 @@ package org.example.entity;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-import org.springframework.lang.Nullable;
 
 import javax.persistence.*;
 import java.util.HashSet;
@@ -16,7 +15,7 @@ import java.util.Set;
 public class Post {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "post_id")
     private Long id;
 
@@ -33,7 +32,7 @@ public class Post {
     private Set<String> videoList = new HashSet<>();
 
     @ManyToOne
-    @JoinColumn(name = "user_id")
+    @JoinColumn(name = "member_id")
     private User user;
 
 
