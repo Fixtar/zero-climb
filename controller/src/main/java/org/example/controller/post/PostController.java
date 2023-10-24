@@ -13,6 +13,8 @@ import org.example.post.dto.PostInfoDto;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Slice;
+import org.springframework.data.domain.Sort;
+import org.springframework.data.domain.Sort.Direction;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -72,7 +74,8 @@ public class PostController {
 
     @GetMapping("/gym")
     public Slice<PostRes> getPostListByGym(@RequestParam(name = "gym") String gymName){
-        Slice<Post> postSlice = postRepository.findSliceByGym_Name(gymName, PageRequest.of(0,9));
+        PageRequest pageRequest = PageRequest.of(0,9, Sort.by(Direction.DESC,"created_at");
+        Slice<Post> postSlice = postRepository.findSliceByGym_Name(gymName, pageRequest);
         return postSlice.map(post -> PostRes.builder()
                 .id(post.getId())
                 .Content(post.getContent())
