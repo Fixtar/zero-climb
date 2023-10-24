@@ -2,7 +2,6 @@ package org.example.post.dto;
 
 import lombok.Builder;
 import lombok.Getter;
-import lombok.Setter;
 
 import java.util.HashSet;
 import java.util.Set;
@@ -19,6 +18,8 @@ public class PostInfoDto {
 
     private Set<String> videoList = new HashSet<>();
 
-    private Long memberId;
+    private String memberId;
+
+    private String location;
 
 }

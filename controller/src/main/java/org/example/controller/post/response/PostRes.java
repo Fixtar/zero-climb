@@ -1,8 +1,8 @@
 package org.example.controller.post.response;
 
+import java.time.LocalDateTime;
 import lombok.Builder;
 import lombok.Getter;
-import lombok.Setter;
 
 import java.util.HashSet;
 import java.util.Set;
@@ -19,6 +19,12 @@ public class PostRes {
 
     private Set<String> videoList = new HashSet<>();
 
-    private Long memberId;
+    private String memberId;
+
+    private String location;
+
+    private LocalDateTime createdAt;
+
+    private LocalDateTime lastModifiedAt;
 
 }
