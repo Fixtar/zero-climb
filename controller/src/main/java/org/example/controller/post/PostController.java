@@ -11,7 +11,6 @@ import org.example.post.PostRepository;
 import org.example.post.PostService;
 import org.example.post.dto.PostInfoDto;
 import org.springframework.data.domain.PageRequest;
-import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Slice;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.domain.Sort.Direction;
@@ -66,7 +65,7 @@ public class PostController {
         return postService.uploadPost(postInfoDto);
     }
 
-    @GetMapping("")
+    @GetMapping("/user")
     public List<PostRes> getPostListByUserId(@RequestParam(name = "user") String memberId) {
         List<Post> postList = postRepository.getPostsByUser_MemberId(memberId);
         return postListToPostResList(postList);
@@ -74,7 +73,7 @@ public class PostController {
 
     @GetMapping("/gym")
     public Slice<PostRes> getPostListByGym(@RequestParam(name = "gym") String gymName){
-        PageRequest pageRequest = PageRequest.of(0,9, Sort.by(Direction.DESC,"created_at");
+        PageRequest pageRequest = PageRequest.of(0,9, Sort.by(Direction.DESC,"created_at"));
         Slice<Post> postSlice = postRepository.findSliceByGym_Name(gymName, pageRequest);
         return postSlice.map(post -> PostRes.builder()
                 .id(post.getId())
@@ -87,6 +86,22 @@ public class PostController {
                 .lastModifiedAt(post.getUpdated_at())
                 .build()
         );
+    }
+
+    @GetMapping("")
+    public Slice<PostRes> getPostListAll(){
+        PageRequest pageRequest = PageRequest.of(0,9, Sort.by(Direction.DESC,"created_at"));
+        Slice<Post> postSlice = postRepository.findAll(pageRequest);
+        return postSlice.map(post -> PostRes.builder()
+                .id(post.getId())
+                .Content(post.getContent())
+                .memberId(post.getUser().getMemberId())
+                .videoList(post.getVideoList())
+                .location(post.getGym().getName())
+                .Difficulty(post.getDifficulty())
+                .createdAt(post.getCreated_at())
+                .lastModifiedAt(post.getUpdated_at())
+                .build());
     }
 
     private List<PostRes> postListToPostResList(List<Post> postList) {
