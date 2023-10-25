@@ -34,10 +34,7 @@ public class PostController {
 
     @GetMapping("/{post-id}")
     public PostRes getPost(@PathVariable(value = "post-id") Long postId) {
-
-        log.info("getPost Controller : " + postId);
         PostInfoDto postInfoDto = postService.getPostByPostId(postId);
-        log.info("post Service Success!  " + postId);
         return PostRes.builder()
                 .id(postInfoDto.getId())
                 .Content(postInfoDto.getContent())
