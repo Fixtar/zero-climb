@@ -1,7 +1,11 @@
 package org.example.file;
 
+import com.amazonaws.HttpMethod;
 import com.amazonaws.services.s3.AmazonS3Client;
 import com.amazonaws.services.s3.model.ObjectMetadata;
+import java.net.URL;
+import java.time.LocalDateTime;
+import java.util.Date;
 import lombok.RequiredArgsConstructor;
 import org.example.file.dto.FileStreamingDto;
 import org.example.file.exception.FileUploadException;
@@ -43,6 +47,16 @@ public class FileService {
             throw new FileUploadException("upload error");
         }
 
+    }
+
+    public String generatePreSignedUrl(){
+        Date expiration = new Date();
+        long expTimeMillis = expiration.getTime();
+        expTimeMillis += 1000 * 60 * 180; //180분 추가
+        expiration.setTime(expTimeMillis);
+
+        URL preSignedUrl = amazonS3Client.generatePresignedUrl(bucket,"videos/11", expiration, HttpMethod.PUT);
+        return preSignedUrl.toString();
     }
 
 

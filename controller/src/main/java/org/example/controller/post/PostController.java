@@ -46,7 +46,8 @@ public class PostController {
     }
 
     @PostMapping("")
-    public Long uploadPost(@RequestPart("info") PostReq postReq, @RequestPart("file") MultipartFile multipartFile) throws FileUploadException {
+    public Long uploadPost(@RequestPart("info") PostReq postReq, @RequestPart("file") MultipartFile multipartFile)
+            throws FileUploadException {
 
         String fileUrl = fileService.fileUpload(multipartFile);
         Set<String> fileUrlList = new HashSet<>();
@@ -69,8 +70,8 @@ public class PostController {
     }
 
     @GetMapping("/gym")
-    public Slice<PostRes> getPostListByGym(@RequestParam(name = "gym") String gymName){
-        PageRequest pageRequest = PageRequest.of(0,9, Sort.by(Direction.DESC,"created_at"));
+    public Slice<PostRes> getPostListByGym(@RequestParam(name = "gym") String gymName) {
+        PageRequest pageRequest = PageRequest.of(0, 9, Sort.by(Direction.DESC, "created_at"));
         Slice<Post> postSlice = postRepository.findSliceByGym_Name(gymName, pageRequest);
         return postSlice.map(post -> PostRes.builder()
                 .id(post.getId())
@@ -86,8 +87,8 @@ public class PostController {
     }
 
     @GetMapping("")
-    public Slice<PostRes> getPostListAll(){
-        PageRequest pageRequest = PageRequest.of(0,9, Sort.by(Direction.DESC,"created_at"));
+    public Slice<PostRes> getPostListAll() {
+        PageRequest pageRequest = PageRequest.of(0, 9, Sort.by(Direction.DESC, "created_at"));
         Slice<Post> postSlice = postRepository.findAll(pageRequest);
         return postSlice.map(post -> PostRes.builder()
                 .id(post.getId())
