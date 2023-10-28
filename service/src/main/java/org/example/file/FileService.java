@@ -4,11 +4,14 @@ import com.amazonaws.HttpMethod;
 import com.amazonaws.services.s3.AmazonS3Client;
 import com.amazonaws.services.s3.model.ObjectMetadata;
 import java.net.URL;
-import java.time.LocalDateTime;
 import java.util.Date;
+import java.util.UUID;
 import lombok.RequiredArgsConstructor;
+import org.example.entity.S3Entity;
 import org.example.file.dto.FileStreamingDto;
+import org.example.file.dto.PreSignedUrlDto;
 import org.example.file.exception.FileUploadException;
+import org.example.s3entity.S3EntityRepository;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
@@ -25,7 +28,7 @@ public class FileService {
 
     private String storeDir = "/Users/seongha/Desktop/dev/zero-climb/video/";
 
-
+    private final S3EntityRepository s3EntityRepository;
     private final AmazonS3Client amazonS3Client;
 
     @Value("${cloud.aws.s3.bucket}")
@@ -49,16 +52,30 @@ public class FileService {
 
     }
 
-    public String generatePreSignedUrl(){
+    public PreSignedUrlDto generatePreSignedUrl(String memberId) {
         Date expiration = new Date();
         long expTimeMillis = expiration.getTime();
         expTimeMillis += 1000 * 60 * 180; //180분 추가
         expiration.setTime(expTimeMillis);
 
-        URL preSignedUrl = amazonS3Client.generatePresignedUrl(bucket,"videos/11", expiration, HttpMethod.PUT);
-        return preSignedUrl.toString();
-    }
+        UUID uuid = UUID.randomUUID();
+        String fileName = "videos/" + uuid;
+        URL preSignedUrl = amazonS3Client.generatePresignedUrl(bucket, fileName, expiration, HttpMethod.PUT);
 
+        //db 만들어서 누가 요청했는지(아이디), 실제로 업로드가 이루어 졌는지 확인.(게시글 업로드할 때 체크)
+        S3Entity s3 = S3Entity.builder()
+                .memberId(memberId)
+                .fileName(fileName)
+                .isStore(false)
+                .build();
+        s3EntityRepository.save(s3);
+
+
+        return PreSignedUrlDto.builder()
+                .preSignedUrl(preSignedUrl.toString())
+                .fileName(fileName)
+                .build();
+    }
 
     //로컬에 파일 업로드
 //    public void fileUpload(MultipartFile multipartFile) throws FileUploadException {

@@ -46,22 +46,19 @@ public class PostController {
     }
 
     @PostMapping("")
-    public Long uploadPost(@RequestPart("info") PostReq postReq, @RequestPart("file") MultipartFile multipartFile)
-            throws FileUploadException {
+    public Long uploadPost(@RequestPart("info") PostReq postReq) {
 
-        String fileUrl = fileService.fileUpload(multipartFile);
-        Set<String> fileUrlList = new HashSet<>();
-        fileUrlList.add(fileUrl);
         PostInfoDto postInfoDto = PostInfoDto.builder()
                 .Content(postReq.getContent())
                 .Difficulty(postReq.getDifficulty())
                 .memberId(postReq.getMemberId())
-                .videoList(fileUrlList)
+                .videoList(postReq.getVideoList())
                 .location(postReq.getLocation())
                 .build();
 
         return postService.uploadPost(postInfoDto);
     }
+
 
     @GetMapping("/user")
     public List<PostRes> getPostListByUserId(@RequestParam(name = "user") String memberId) {

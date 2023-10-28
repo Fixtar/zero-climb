@@ -1,5 +1,6 @@
 package org.example.controller.post.request;
 
+import java.util.Set;
 import lombok.Builder;
 import lombok.Getter;
 
@@ -15,4 +16,5 @@ public class PostReq {
 
     private String location;
 
+    private Set<String> videoList;
 }

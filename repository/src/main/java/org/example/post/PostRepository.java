@@ -1,6 +1,5 @@
 package org.example.post;
 
-import org.example.entity.Gym;
 import org.example.entity.Post;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Slice;
