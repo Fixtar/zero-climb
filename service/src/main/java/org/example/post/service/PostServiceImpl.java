@@ -81,7 +81,6 @@ public class PostServiceImpl implements PostService {
     private void changeIsStoreValue(Set<String> videoList) {
 
         for (String url : videoList) {
-            log.info("222 : " + url);
             S3Entity s3 = s3EntityRepository.getS3EntityByFileName(url);
             s3.setStore(true);
         }
