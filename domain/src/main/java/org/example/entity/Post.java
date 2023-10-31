@@ -35,7 +35,6 @@ public class Post extends BaseEntity{
     @JoinColumn(name = "member_id")
     private User user;
 
-
     @Builder
     public Post(String content, Gym gym, String difficulty, Set<String> videoList, User user) {
         this.content = content;
@@ -44,4 +43,12 @@ public class Post extends BaseEntity{
         this.videoList = videoList;
         this.user = user;
     }
+
+    public void updatePost(String content, Gym gym, String difficulty, Set<String> videoList) {
+        this.content = content;
+        this.gym = gym;
+        this.difficulty = difficulty;
+        this.videoList = videoList;
+    }
+
 }

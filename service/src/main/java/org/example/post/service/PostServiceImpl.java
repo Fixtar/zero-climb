@@ -1,6 +1,5 @@
 package org.example.post.service;
 
-import java.util.HashSet;
 import java.util.Set;
 import java.util.stream.Collectors;
 import lombok.RequiredArgsConstructor;
@@ -14,10 +13,12 @@ import org.example.location.LocationRepository;
 import org.example.post.PostRepository;
 import org.example.post.PostService;
 import org.example.post.dto.PostInfoDto;
+import org.example.post.dto.PostUpdateDto;
 import org.example.s3entity.S3EntityRepository;
 import org.example.user.UserRepository;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 @Slf4j
 @Service
@@ -48,6 +49,8 @@ public class PostServiceImpl implements PostService {
                 .Difficulty(post.getDifficulty())
                 .memberId(post.getUser().getMemberId())
                 .location(locationName)
+                .createdAt(post.getCreated_at())
+                .lastModifiedAt(post.getUpdated_at())
                 .build();
     }
 
@@ -87,4 +90,19 @@ public class PostServiceImpl implements PostService {
 
     }
 
+    @Override
+    @Transactional
+    public Long updatePost(PostUpdateDto postUpdateDto) {
+        Post post = postRepository.getPostById(postUpdateDto.getPostId());
+        String postMemberId = post.getUser().getMemberId();
+        if (!postMemberId.equals(postUpdateDto.getMemberId())) {
+            throw new RuntimeException(Error.REQUEST_VALIDATION_EXCEPTION.getMessage());
+        }
+        Gym gym = locationRepository.getLocationByName(postUpdateDto.getLocation())
+                .orElseThrow(() -> new IllegalArgumentException(Error.NOT_FOUND_GYM_EXCEPTION.getMessage()));
+
+        post.updatePost(postUpdateDto.getContent(), gym, postUpdateDto.getDifficulty(), postUpdateDto.getVideoList());
+        postRepository.save(post);
+        return post.getId();
+    }
 }

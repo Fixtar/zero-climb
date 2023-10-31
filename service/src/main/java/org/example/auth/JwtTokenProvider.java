@@ -29,7 +29,6 @@ public class JwtTokenProvider {
     public JwtTokenProvider(@Value("${jwt.secret}") String secretKey) {
         byte[] keyBytes = Decoders.BASE64.decode(secretKey);
         this.key = Keys.hmacShaKeyFor(keyBytes);
-        log.info("@@" + secretKey);
     }
 
     public TokenDto generateToken(Authentication authentication) {
