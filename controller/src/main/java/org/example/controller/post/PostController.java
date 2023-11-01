@@ -73,6 +73,14 @@ public class PostController {
         return postService.updatePost(postUpdateDto);
     }
 
+    @DeleteMapping("/{post-id}")
+    public void deletePost(@PathVariable(value = "post-id") Long postId,
+                           Authentication authentication) {
+        String tokenMemberId = authentication.getName();
+
+        postService.deletePostByPostId(postId, tokenMemberId);
+    }
+
 
     @GetMapping("/user")
     public List<PostRes> getPostListByUserId(@RequestParam(name = "user") String memberId) {

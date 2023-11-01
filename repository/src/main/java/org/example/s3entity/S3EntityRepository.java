@@ -8,4 +8,6 @@ public interface S3EntityRepository extends JpaRepository<S3Entity, Long> {
 
         S3Entity getS3EntityByFileName(String fileName);
 
+        void deleteByFileName(String fileName);
+
 }

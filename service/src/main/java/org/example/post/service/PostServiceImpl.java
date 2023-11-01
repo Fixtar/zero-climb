@@ -9,6 +9,7 @@ import org.example.entity.Post;
 import org.example.entity.S3Entity;
 import org.example.entity.User;
 import org.example.exception.Error;
+import org.example.file.FileService;
 import org.example.location.LocationRepository;
 import org.example.post.PostRepository;
 import org.example.post.PostService;
@@ -29,6 +30,7 @@ public class PostServiceImpl implements PostService {
     private final UserRepository userRepository;
     private final LocationRepository locationRepository;
     private final S3EntityRepository s3EntityRepository;
+    private final FileService fileService;
 
     @Value("${cloud.aws.s3.bucket}")
     private String bucket;
@@ -95,9 +97,7 @@ public class PostServiceImpl implements PostService {
     public Long updatePost(PostUpdateDto postUpdateDto) {
         Post post = postRepository.getPostById(postUpdateDto.getPostId());
         String postMemberId = post.getUser().getMemberId();
-        if (!postMemberId.equals(postUpdateDto.getMemberId())) {
-            throw new RuntimeException(Error.REQUEST_VALIDATION_EXCEPTION.getMessage());
-        }
+        throwIfDoesNotEqualsMemberId(postUpdateDto.getMemberId(), postMemberId);
         Gym gym = locationRepository.getLocationByName(postUpdateDto.getLocation())
                 .orElseThrow(() -> new IllegalArgumentException(Error.NOT_FOUND_GYM_EXCEPTION.getMessage()));
 
@@ -105,4 +105,25 @@ public class PostServiceImpl implements PostService {
         postRepository.save(post);
         return post.getId();
     }
+
+    @Override
+    @Transactional
+    public void deletePostByPostId(Long postId, String memberId) {
+        Post post = postRepository.getPostById(postId);
+        String postMemberId = post.getUser().getMemberId();
+        throwIfDoesNotEqualsMemberId(memberId, postMemberId);
+        Set<String> videoList = post.getVideoList();
+        for (String filename : videoList) {
+            fileService.deleteS3Post(filename);
+            s3EntityRepository.deleteByFileName(filename);
+        }
+        postRepository.delete(post);
+    }
+
+    void throwIfDoesNotEqualsMemberId(String tokenMemberId, String postMemberId) {
+        if (!postMemberId.equals(tokenMemberId)) {
+            throw new RuntimeException(Error.REQUEST_VALIDATION_EXCEPTION.getMessage());
+        }
+    }
+
 }

@@ -2,6 +2,8 @@ package org.example.file;
 
 import com.amazonaws.HttpMethod;
 import com.amazonaws.services.s3.AmazonS3Client;
+import com.amazonaws.services.s3.model.DeleteObjectRequest;
+import com.amazonaws.services.s3.model.DeleteObjectsRequest;
 import java.net.URL;
 import java.util.Date;
 import java.util.UUID;
@@ -44,6 +46,11 @@ public class FileService {
                 .preSignedUrl(preSignedUrl.toString())
                 .fileName(fileName)
                 .build();
+    }
+
+    public void deleteS3Post(String filename){
+        DeleteObjectRequest deleteObjectsRequest = new DeleteObjectRequest(bucket,filename);
+        amazonS3Client.deleteObject(deleteObjectsRequest);
     }
 
 }

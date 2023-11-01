@@ -11,4 +11,6 @@ public interface PostService {
 
     Long updatePost(PostUpdateDto postUpdateDto);
 
+    void deletePostByPostId(Long postId, String memberId);
+
 }
