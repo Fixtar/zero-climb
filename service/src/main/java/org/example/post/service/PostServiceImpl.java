@@ -101,9 +101,25 @@ public class PostServiceImpl implements PostService {
         Gym gym = locationRepository.getLocationByName(postUpdateDto.getLocation())
                 .orElseThrow(() -> new IllegalArgumentException(Error.NOT_FOUND_GYM_EXCEPTION.getMessage()));
 
+        updateS3Entity(post, postUpdateDto);
         post.updatePost(postUpdateDto.getContent(), gym, postUpdateDto.getDifficulty(), postUpdateDto.getVideoList());
         postRepository.save(post);
         return post.getId();
+    }
+
+    private void updateS3Entity(Post post, PostUpdateDto postUpdateDto) {
+        for (String filename : post.getVideoList()) {
+            S3Entity s3Entity = s3EntityRepository.getS3EntityByFileName(filename);
+            s3Entity.setStore(false);
+        }
+        for (String filename : postUpdateDto.getVideoList()) {
+            try {
+                S3Entity s3Entity = s3EntityRepository.getS3EntityByFileName(filename);
+                s3Entity.setStore(true);
+            } catch (NullPointerException e) {
+                throw new IllegalArgumentException(Error.NOT_FOUND_S3ENTITY_EXCEPTION.getMessage());
+            }
+        }
     }
 
     @Override
