@@ -1,6 +1,7 @@
 package org.example.post;
 
 import org.example.post.dto.PostInfoDto;
+import org.example.post.dto.PostUpdateDto;
 
 public interface PostService {
 
@@ -8,5 +9,8 @@ public interface PostService {
 
     Long uploadPost(PostInfoDto postInfoDto);
 
+    Long updatePost(PostUpdateDto postUpdateDto);
+
+    void deletePostByPostId(Long postId, String memberId);
 
 }

@@ -3,10 +3,12 @@ package org.example.controller.post.request;
 import java.util.Set;
 import lombok.Builder;
 import lombok.Getter;
+import lombok.Setter;
 
-@Builder
 @Getter
-public class PostReq {
+@Setter
+@Builder
+public class PostUpdateReq {
 
     private String Content;
 
@@ -15,4 +17,5 @@ public class PostReq {
     private String location;
 
     private Set<String> videoList;
+
 }

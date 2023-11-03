@@ -29,6 +29,8 @@ public enum Error {
     NOT_FOUND_USER_EXCEPTION(HttpStatus.NOT_FOUND, "존재하지 않는 유저입니다"),
     NOT_FOUND_POST_EXCEPTION(HttpStatus.NOT_FOUND, "존재하지 않는 게시물입니다"),
     NOT_FOUND_EMOTION_EXCEPTION(HttpStatus.NOT_FOUND, "존재하지 않는 감정 기록입니다"),
+    NOT_FOUND_GYM_EXCEPTION(HttpStatus.NOT_FOUND, "존재하지 않는 암장입니다."),
+    NOT_FOUND_S3ENTITY_EXCEPTION(HttpStatus.NOT_FOUND, "존재하지 않는 s3 엔티티입니다."),
 
     /**
      * 409 CONFLICT
