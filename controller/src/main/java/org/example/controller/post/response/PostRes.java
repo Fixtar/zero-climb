@@ -17,7 +17,7 @@ public class PostRes {
 
     private String Difficulty;
 
-    private Set<String> videoList = new HashSet<>();
+    private Set<String> videoList;
 
     private String memberId;
 
