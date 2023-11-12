@@ -238,3 +238,5 @@ gradle-app.setting
 .idea
 .build
 video
+.env
+/db
