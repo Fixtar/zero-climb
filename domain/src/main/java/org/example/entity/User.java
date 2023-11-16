@@ -40,7 +40,7 @@ public class User implements UserDetails {
 
     @OneToMany(mappedBy = "user")
     @Column(name = "user_post_list")
-    private List<Post> postList = new ArrayList<>();
+    private List<Post> postList;
 
     public void addAuthorities(String role) {
         this.roles.add(role);
