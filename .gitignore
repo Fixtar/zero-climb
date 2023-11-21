@@ -241,3 +241,6 @@ video
 .env
 /db
 !controller-0.0.1-SNAPSHOT.jar
+
+
+controller/src/main/resources/application.yml
