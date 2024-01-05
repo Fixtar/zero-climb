@@ -238,3 +238,4 @@ gradle-app.setting
 .idea
 .build
 video
+controller/src/main/resources/application.yml
